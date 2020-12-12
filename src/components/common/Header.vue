@@ -60,10 +60,14 @@ export default {
         };
     },
     computed: {
+        user() {
+            var getLocalData = localStorage.getItem('ms_username'); // 读取字符串数据
+            var jsonObj = JSON.parse(getLocalData);
+            return jsonObj
+        },
         username() {
-            let username = localStorage.getItem('ms_username');
-            return username ? username : this.name;
-        }
+            return this.user.name;
+        },
     },
     methods: {
         // 用户名下拉菜单选择事件

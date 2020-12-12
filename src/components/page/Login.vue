@@ -21,7 +21,6 @@
                 <div class="login-btn">
                     <el-button type="primary" @click="submitForm()">登录</el-button>
                 </div>
-                <p class="login-tips">Tips : 用户名和密码随便填。</p>
             </el-form>
         </div>
     </div>
@@ -32,8 +31,8 @@ export default {
     data: function() {
         return {
             param: {
-                username: 'admin',
-                password: '123123',
+                username: '1000',
+                password: 'ZHANGqian200630',
             },
             rules: {
                 username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
@@ -45,9 +44,35 @@ export default {
         submitForm() {
             this.$refs.login.validate(valid => {
                 if (valid) {
-                    this.$message.success('登录成功');
-                    localStorage.setItem('ms_username', this.param.username);
-                    this.$router.push('/');
+                  var opts = {
+                    method:"GET",
+                    mode: "cors"
+                  }
+                  fetch("http://main.zqjason.top:8080/GetStaffById/" + this.param.username.toString(), opts).then(response => response.json())
+                      .then(data => {
+                        this.$message.success('登录成功');
+                        let str_jsonData = JSON.stringify(data);
+                        if(data.password === this.param.password) {
+                          let count=0;
+                          localStorage.setItem('ms_username', str_jsonData);
+                          fetch("http://main.zqjason.top:8080/getStaffNumber").then(response => response.text())
+                          .then(data => {
+                            localStorage.setItem('staffNumber', data.toString());
+                            fetch("http://main.zqjason.top:8080/getStaffProportion").then(response => response.json())
+                            .then(data => {
+                              let proportionJson = JSON.stringify(data);
+                              localStorage.setItem("staffProportion", proportionJson);
+                              this.$router.push('/');
+                            })
+
+                          })
+
+                        } else {
+                          this.$message.error("账号或密码错误");
+                        }
+                      })
+                      .catch(e => console.log("Oops, error", e));
+
                 } else {
                     this.$message.error('请输入账号和密码');
                     console.log('error submit!!');
@@ -102,3 +127,5 @@ export default {
     color: #fff;
 }
 </style>
+
+

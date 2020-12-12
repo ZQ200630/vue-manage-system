@@ -15,9 +15,11 @@
                     class="handle-del mr10"
                     @click="delAllSelection"
                 >批量删除</el-button>
-                <el-select v-model="query.address" placeholder="地址" class="handle-select mr10">
-                    <el-option key="1" label="广东省" value="广东省"></el-option>
-                    <el-option key="2" label="湖南省" value="湖南省"></el-option>
+                <el-select v-model="query.address" placeholder="职位" class="handle-select mr10">
+                    <el-option lebel="All" value="All"></el-option>
+                    <el-option v-if="user.level==='Manager'" key="1" label="Manager" value="Manager"></el-option>
+                    <el-option v-if="user.level==='Manager'||user.level==='Salesman'" key="2" label="Salesman" value="Salesman"></el-option>
+                    <el-option v-if="user.level==='Manager'||user.level==='Technician'" key="3" label="Technician" value="Technician"></el-option>
                 </el-select>
                 <el-input v-model="query.name" placeholder="用户名" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
@@ -108,7 +110,7 @@ export default {
     data() {
         return {
             query: {
-                address: '',
+                address: 'All',
                 name: '',
                 pageIndex: 1,
                 pageSize: 10
@@ -125,6 +127,23 @@ export default {
     },
     created() {
         this.getData();
+    },
+    computed: {
+      user() {
+        let getLocalData = localStorage.getItem('ms_username'); // 读取字符串数据
+        let jsonObj = JSON.parse(getLocalData);
+        return jsonObj
+      },
+      address() {
+        return this.query.address;
+      }
+    },
+    watch: {
+      address: {
+        handler(newName, oldName) {
+          console.log(newName + oldName);
+        }
+      }
     },
     methods: {
         // 获取 easy-mock 的模拟数据
