@@ -4,14 +4,14 @@
             <div class="ms-title">后台管理系统</div>
             <el-form :model="param" :rules="rules" ref="login" label-width="0px" class="ms-content">
                 <el-form-item prop="username">
-                    <el-input v-model="param.username" placeholder="username">
+                    <el-input v-model="param.username" placeholder="员工编号">
                         <el-button slot="prepend" icon="el-icon-lx-people"></el-button>
                     </el-input>
                 </el-form-item>
                 <el-form-item prop="password">
                     <el-input
                         type="password"
-                        placeholder="password"
+                        placeholder="员工密码"
                         v-model="param.password"
                         @keyup.enter.native="submitForm()"
                     >
@@ -31,8 +31,8 @@ export default {
     data: function() {
         return {
             param: {
-                username: '1000',
-                password: 'ZHANGqian200630',
+                username: '',
+                password: '',
             },
             rules: {
                 username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
@@ -53,20 +53,8 @@ export default {
                         this.$message.success('登录成功');
                         let str_jsonData = JSON.stringify(data);
                         if(data.password === this.param.password) {
-                          let count=0;
                           localStorage.setItem('ms_username', str_jsonData);
-                          fetch("http://main.zqjason.top:8080/getStaffNumber").then(response => response.text())
-                          .then(data => {
-                            localStorage.setItem('staffNumber', data.toString());
-                            fetch("http://main.zqjason.top:8080/getStaffProportion").then(response => response.json())
-                            .then(data => {
-                              let proportionJson = JSON.stringify(data);
-                              localStorage.setItem("staffProportion", proportionJson);
-                              this.$router.push('/');
-                            })
-
-                          })
-
+                          this.$router.push('/');
                         } else {
                           this.$message.error("账号或密码错误");
                         }

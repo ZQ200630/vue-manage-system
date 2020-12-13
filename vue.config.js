@@ -1,7 +1,11 @@
 module.exports = {
-    baseUrl: './',
-    assetsDir: 'static',
+    publicPath: './',
+    assetsDir: './static',
     productionSourceMap: false,
+    devServer: {
+        port: 3000,
+        disableHostCheck: true
+    }
     // devServer: {
     //     proxy: {
     //         '/api':{

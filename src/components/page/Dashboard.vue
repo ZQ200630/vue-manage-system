@@ -101,6 +101,8 @@ export default {
     name: 'dashboard',
     data() {
         return {
+            countOfStaff: 0,
+            proportionOfStaff: [],
             todoList: [
                 {
                     title: 'Test 1',
@@ -230,19 +232,18 @@ export default {
         id() {
             return this.user.id;
         },
-        countOfStaff() {
-          return localStorage.getItem('staffNumber');
-      },
-        proportionOfStaff() {
-          let getLocalData = localStorage.getItem('staffProportion'); // 读取字符串数据
-          let jsonObj = JSON.parse(getLocalData);
-          return [jsonObj.managerNumber, jsonObj.salesmanNumber, jsonObj.technicianNumber]
-      }
     },
-    // created() {
-    //     this.handleListener();
-    //     this.changeDate();
-    // },
+    created() {
+      fetch("http://main.zqjason.top:8080/getStaffNumber").then(response => response.text())
+          .then(data => {
+            this.countOfStaff = data.toString() ;
+          })
+      fetch("http://main.zqjason.top:8080/getStaffProportion").then(response => response.json())
+          .then(data => {
+            console.log(data)
+            this.proportionOfStaff = [data.managerNumber, data.salesmanNumber, data.technicianNumber];
+          })
+    },
     // activated() {
     //     this.handleListener();
     // },
